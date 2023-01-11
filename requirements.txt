@@ -1,0 +1,8 @@
+numpy
+requests
+pandas
+openpyxl
+flask
+datetime
+azure-cosmos
+ipykernel
