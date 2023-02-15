@@ -57,7 +57,7 @@ for i in range(0,len(dir_list)):
 path = "data/roadnet/xml_outbound/"
 dir_list = os.listdir(path)
 
-print("Loading " + str(len(dir_list)) + " XML files in", path)
+print("Loading " + str(len(dir_list)) + " XML files in ", path)
 
 
 # %%

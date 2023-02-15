@@ -64,13 +64,13 @@ loads_to_wh['LoadID'] = loads_to_wh['LoadID'].astype(int)
 loads_to_wh['LoadID'] = loads_to_wh['LoadID'].astype(str)
 
 # %%
-loads_to_wh
+len(loads_to_wh)
 
 # %% [markdown]
 # ### Split the data among the number of user sessions
 
 # %%
-files_str = input('Enter the number of files into which the loads must be split ')
+files_str = input('Enter the number of files into which the loads must be split')
 files = int(files_str)
 
 # %%
@@ -104,5 +104,7 @@ for i in range(0,len(dir_list)):
     temp.to_excel(excel_file, index=False)
     os.remove(path+dir_list[i])
 
+# %%
+#raise SystemExit("Stop right here!")
 
 
