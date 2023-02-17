@@ -320,7 +320,7 @@ rdnet_in.drop(columns={'CUSTOMERACCOUNT', 'ORGANIZATIONNAME'}, inplace=True, axi
 rdnet_in = rdnet_in.drop_duplicates(keep='first');
 
 # %%
-rdnet_in.sort_values(['ORIGINLOCATIONID','ROADNETROUTE']).to_csv('data/roadnet/try1.csv', index=False)
+#rdnet_in.sort_values(['ORIGINLOCATIONID','ROADNETROUTE']).to_csv('data/roadnet/try1.csv', index=False)
 
 # %% [markdown]
 # ### Split file into n files, each with a different ORIGINLOCATIONID
@@ -429,7 +429,7 @@ for sessionID in sessionids_list:
     mask = (rdnet_in['DYNAMICSRETRIEVALSESSIONID'] == sessionID[0])
     df_temp = rdnet_in[mask].copy()
     filename = 'data/roadnet/inbound/rdnet_inbound_'+sessionID[0]
-    df_temp.to_csv(filename+'.csv',index=False)    
+    df_temp.to_csv(filename+'.csv',index=False, line_terminator='\n')    
 
 # %% [markdown]
 # ### Change nl to cr-nl in the CSV files
