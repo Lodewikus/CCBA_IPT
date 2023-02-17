@@ -429,13 +429,13 @@ for sessionID in sessionids_list:
     mask = (rdnet_in['DYNAMICSRETRIEVALSESSIONID'] == sessionID[0])
     df_temp = rdnet_in[mask].copy()
     filename = 'data/roadnet/inbound/rdnet_inbound_'+sessionID[0]
-    df_temp.to_csv(filename+'.csv',index=False, line_terminator='\n')    
+    df_temp.to_csv(filename+'.csv',index=False, line_terminator='\r\n')    
 
 # %% [markdown]
 # ### Change nl to cr-nl in the CSV files
 
 # %%
-def fix_newlines(fname, fnum):
+""" def fix_newlines(fname, fnum):
 
     with open(fname, 'r') as fr:
         # reading line by line
@@ -449,16 +449,16 @@ def fix_newlines(fname, fnum):
         with open(outfile, 'a') as fw:
             fw.write(replaced_line)    
 
-    return
+    return """
 
 # %%
-path = "data/roadnet/inbound/"
+""" path = "data/roadnet/inbound/"
 dir_list = os.listdir(path)
 
 for i in range(0,len(dir_list)):
     csv_file = path+dir_list[i]
     fix_newlines(csv_file,i)
-    os.remove(path+dir_list[i])
+    os.remove(path+dir_list[i]) """
 
 # %%
 print('The Roadnet order lines were split by warehouse and route ID, into ' + str(number_of_sessionIDs) + ' files.  The lines were split as follows:')
