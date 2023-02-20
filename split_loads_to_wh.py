@@ -34,6 +34,7 @@ dir_list = os.listdir(path)
 
 # %%
 loadfiles_concat = pd.read_excel(path+dir_list[0])
+print(xml_file)
 try:
     loadfiles_concat.rename(columns={'Load ID': 'LoadID'}, inplace=True)
 except:
@@ -42,13 +43,16 @@ except:
 # %%
 for i in range(1,len(dir_list)):
     xml_file = path+dir_list[i]
-    print(str(i)+xml_file)
+    print(xml_file)
     temp = pd.read_excel(path+dir_list[i])
     try:
         temp.rename(columns={'Load ID': 'LoadID'}, inplace=True)
     except:
         pass
     loadfiles_concat = pd.concat([loadfiles_concat, temp], ignore_index=True)
+
+# %%
+#loadfiles_concat.to_excel('data/rel_to_wh/consolidated.xlsx')
 
 # %%
 loads_to_wh = loadfiles_concat[['LoadID','Description']].copy()
@@ -59,18 +63,11 @@ loads_to_wh.drop_duplicates(keep='first',inplace=True)
 loads_to_wh = loads_to_wh.dropna()
 loads_to_wh.reset_index(drop=True, inplace=True)
 
-# %%
-loads_to_wh['LoadID'] = loads_to_wh['LoadID'].astype(int)
-loads_to_wh['LoadID'] = loads_to_wh['LoadID'].astype(str)
-
-# %%
-len(loads_to_wh)
-
 # %% [markdown]
 # ### Split the data among the number of user sessions
 
 # %%
-files_str = input('Enter the number of files into which the loads must be split')
+files_str = input('Enter the number of files into which the loads must be split: ')
 files = int(files_str)
 
 # %%
@@ -86,6 +83,7 @@ for i in range(len(loads_to_wh)):
         file = 1
     with open('data/rel_to_wh/outbound_to_EA/wh' + str(file) + '.csv', 'a') as fw:        
         fw.write(str(loads_to_wh.loc[i, "LoadID"])+'\n')
+        #print(file,loads_to_wh.loc[i, "LoadID"])
 
 # %% [markdown]
 # ### Now convert the CSV files into Excel
@@ -103,8 +101,5 @@ for i in range(0,len(dir_list)):
     temp = pd.read_csv(path+dir_list[i])
     temp.to_excel(excel_file, index=False)
     os.remove(path+dir_list[i])
-
-# %%
-#raise SystemExit("Stop right here!")
 
 
