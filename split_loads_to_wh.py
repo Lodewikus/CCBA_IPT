@@ -33,6 +33,9 @@ path = "data/rel_to_wh/inbound_from_D365/"
 dir_list = os.listdir(path)
 
 # %%
+print("Reading load files from D365\n")
+
+# %%
 loadfiles_concat = pd.read_excel(path+dir_list[0])
 input_file = path+dir_list[0]
 print(input_file)
@@ -51,6 +54,8 @@ for i in range(1,len(dir_list)):
     except:
         pass
     loadfiles_concat = pd.concat([loadfiles_concat, temp], ignore_index=True)
+
+print('')
 
 # %%
 #loadfiles_concat.to_excel('data/rel_to_wh/consolidated.xlsx')
@@ -102,5 +107,8 @@ for i in range(0,len(dir_list)):
     temp = pd.read_csv(path+dir_list[i])
     temp.to_excel(excel_file, index=False)
     os.remove(path+dir_list[i])
+
+# %%
+print('\nOutput files were written to data/rel_to_wh/outbound_to_EA/')
 
 
