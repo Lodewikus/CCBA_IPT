@@ -34,7 +34,8 @@ dir_list = os.listdir(path)
 
 # %%
 loadfiles_concat = pd.read_excel(path+dir_list[0])
-print(xml_file)
+input_file = path+dir_list[0]
+print(input_file)
 try:
     loadfiles_concat.rename(columns={'Load ID': 'LoadID'}, inplace=True)
 except:
@@ -42,8 +43,8 @@ except:
 
 # %%
 for i in range(1,len(dir_list)):
-    xml_file = path+dir_list[i]
-    print(xml_file)
+    input_file = path+dir_list[i]
+    print(input_file)
     temp = pd.read_excel(path+dir_list[i])
     try:
         temp.rename(columns={'Load ID': 'LoadID'}, inplace=True)
