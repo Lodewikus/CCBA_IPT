@@ -5,3 +5,5 @@ openpyxl
 datetime
 lxml
 ipykernel
+tqdm
+pyodbc
