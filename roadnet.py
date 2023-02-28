@@ -265,23 +265,28 @@ rdnet_in['TOTALTRAVELTIME'] = '0'
 rdnet_in['LINEREFID'] = rdnet_in['INVENTTRANSID']
 
 # %%
-rdnet_in['ROUTECOMPLETETIME'] = pd.to_datetime('today')
-rdnet_in['ROUTECOMPLETETIME'] = rdnet_in['ROUTECOMPLETETIME'].dt.normalize() + pd.Timedelta(days=1) + pd.Timedelta(hours=13) + pd.Timedelta(minutes=19)
+date_txt = input('Enter the dispatch date in the format yyyy-mm-dd: ')
+date_dt = pd.to_datetime(date_txt)
+#date_dt = pd.to_datetime('today')
 
-rdnet_in['ROUTESTARTTIME'] = pd.to_datetime('today')
-rdnet_in['ROUTESTARTTIME'] = rdnet_in['ROUTESTARTTIME'].dt.normalize() + pd.Timedelta(days=1) + pd.Timedelta(hours=4) + pd.Timedelta(minutes=0)
+# %%
+rdnet_in['ROUTECOMPLETETIME'] = date_dt
+rdnet_in['ROUTECOMPLETETIME'] = rdnet_in['ROUTECOMPLETETIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=13) + pd.Timedelta(minutes=19)
 
-rdnet_in['SCHEDULEDARRIVALDATETIME'] = pd.to_datetime('today')
-rdnet_in['SCHEDULEDARRIVALDATETIME'] = rdnet_in['SCHEDULEDARRIVALDATETIME'].dt.normalize() + pd.Timedelta(days=1) + pd.Timedelta(hours=12) + pd.Timedelta(minutes=59)
+rdnet_in['ROUTESTARTTIME'] = date_dt
+rdnet_in['ROUTESTARTTIME'] = rdnet_in['ROUTESTARTTIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=4) + pd.Timedelta(minutes=0)
 
-rdnet_in['SCHEDULEDDELIVERYDATETIME'] = pd.to_datetime('today')
-rdnet_in['SCHEDULEDDELIVERYDATETIME'] = rdnet_in['SCHEDULEDDELIVERYDATETIME'].dt.normalize() + pd.Timedelta(days=1)
+rdnet_in['SCHEDULEDARRIVALDATETIME'] = date_dt
+rdnet_in['SCHEDULEDARRIVALDATETIME'] = rdnet_in['SCHEDULEDARRIVALDATETIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=12) + pd.Timedelta(minutes=59)
 
-rdnet_in['SCHEDULEDSHIPDATETIME'] = pd.to_datetime('today')
-rdnet_in['SCHEDULEDSHIPDATETIME'] = rdnet_in['SCHEDULEDSHIPDATETIME'].dt.normalize() + pd.Timedelta(days=1) + pd.Timedelta(hours=4) + pd.Timedelta(minutes=10)
+rdnet_in['SCHEDULEDDELIVERYDATETIME'] = date_dt
+rdnet_in['SCHEDULEDDELIVERYDATETIME'] = rdnet_in['SCHEDULEDDELIVERYDATETIME'].dt.normalize() + pd.Timedelta(days=0)
 
-rdnet_in['STOPARRIVALTIME'] = pd.to_datetime('today')
-rdnet_in['STOPARRIVALTIME'] = rdnet_in['STOPARRIVALTIME'].dt.normalize() + pd.Timedelta(days=1) + pd.Timedelta(hours=8) + pd.Timedelta(minutes=28)
+rdnet_in['SCHEDULEDSHIPDATETIME'] = date_dt
+rdnet_in['SCHEDULEDSHIPDATETIME'] = rdnet_in['SCHEDULEDSHIPDATETIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=4) + pd.Timedelta(minutes=10)
+
+rdnet_in['STOPARRIVALTIME'] = date_dt
+rdnet_in['STOPARRIVALTIME'] = rdnet_in['STOPARRIVALTIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=8) + pd.Timedelta(minutes=28)
 
 # %% [markdown]
 # ### Get customer master in order to get the postal code
@@ -464,5 +469,12 @@ for i in range(0,len(dir_list)):
 print('The Roadnet order lines were split by warehouse and route ID, into ' + str(number_of_sessionIDs) + ' files.  The lines were split as follows:')
 print(rdnet_in.groupby(['DYNAMICSRETRIEVALSESSIONID']).agg({'INVENTTRANSID': 'count'}))
 
+
+# %%
+rdnet_out['WAREHOUSEID'].nunique()
+
+
+# %% [markdown]
+# ### End of script
 
 
