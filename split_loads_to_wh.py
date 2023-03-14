@@ -61,8 +61,10 @@ print('')
 #loadfiles_concat.to_excel('data/rel_to_wh/consolidated.xlsx')
 
 # %%
-loads_to_wh = loadfiles_concat[['LoadID','Description']].copy()
-loads_to_wh.drop(columns={'Description'}, inplace=True, axis=1)
+# loads_to_wh = loadfiles_concat[['LoadID','Description']].copy()
+# loads_to_wh.drop(columns={'Description'}, inplace=True, axis=1)
+
+loads_to_wh = loadfiles_concat[['LoadID']].copy()
 
 # %%
 loads_to_wh.drop_duplicates(keep='first',inplace=True)
