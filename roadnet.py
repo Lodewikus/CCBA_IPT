@@ -133,13 +133,15 @@ for i in range(0,len(prep_dir_list)):
     import_roadnet_files2(xml_file,i, consolidated_roadnet_out_file)
 
 # %% [markdown]
-# ### Split up the consolidated xml file into 10,000 lines or fewer, else they cannot be imported into a Pandas dataframe
+# ### Split up the consolidated xml file into 5,000 lines, else they cannot be imported into a Pandas dataframe
 # - Store these files in the same folder as the consolidated xml, and delete the consolidated xml after the split
 # - Add the lines to turn this into a valid XML format
 
 # %%
 fname = consolidated_roadnet_out_file
 outfile = fname
+
+sizelimit = 5000
 
 try:    
     with open(fname, 'r') as fr:
@@ -156,7 +158,7 @@ try:
             line = lines[i]
             if i == last_line:
                 print(line)
-            x = int(i/10000)
+            x = int(i/sizelimit)
             with open(outfile[:-4]+str(x)+'.xml', 'a') as fw:        
                 if i == 0:
                     fw.write('<?xml version="1.0" encoding="utf-8"?>\n')
@@ -166,7 +168,7 @@ try:
                     fw.write('<?xml version="1.0" encoding="utf-8"?>\n')
                     fw.write('<Document>\n')
                 fw.write(line)
-                if int((i+1)/10000) > x:
+                if int((i+1)/sizelimit) > x:
                     fw.write('</Document>')
                 if i == len(lines) - 1:
                     fw.write('</Document>')
@@ -189,6 +191,9 @@ dir_list = os.listdir(path)
 #print(dir_list)
 
 # %%
+#try1 = pd.read_xml("./data/roadnet/xml_consolidated/consolidated_roadnet_out0.xml")
+
+# %%
 # Import the first file into a dataframe
 rdnet_out = pd.read_xml(path+dir_list[0])
 
@@ -200,6 +205,27 @@ for i in range(1,len(dir_list)):
     temp = pd.read_xml(path+dir_list[i])
     rdnet_out = pd.concat([rdnet_out, temp], ignore_index=True)
 
+# %%
+len(rdnet_out)
+
+# %%
+rdnet_out[rdnet_out.duplicated(['INVENTTRANSID'], keep=False)]
+
+# %%
+rdnet_out.drop(columns={'OUTPERFORMROADNETDESTINATION'}, inplace=True, axis=1)
+
+# %%
+#rdnet_out.query("INVENTTRANSID == 'ZA1-108660005'").to_excel("./data/roadnet/duplicates.xlsx")
+
+# %%
+rdnet_out = rdnet_out.drop_duplicates(keep='first').copy()
+
+# %%
+len(rdnet_out)
+
+# %%
+#rdnet_out = rdnet_out.drop_duplicates(subset = ['INVENTTRANSID'], keep='first').copy()
+
 # %% [markdown]
 # ### Create the Roadnet inbound file by copying selected columns as-is from the outbound data
 
@@ -207,13 +233,19 @@ for i in range(1,len(dir_list)):
 rdnet_in = rdnet_out[['QUANTITY','LOCATIONID','INVENTTRANSID','ITEMID','ORDERID','WAREHOUSEID','PRODUCTNAME','ROADNETROUTE','ORDERACCOUNT','ORDERACCOUNTNAME','WEIGHT']].copy()
 
 # %%
+rdnet_in = rdnet_in.dropna(subset=['WAREHOUSEID']).copy()
+
+# %%
+#rdnet_in[rdnet_in. duplicated(subset = ['INVENTTRANSID'], keep=False)]
+
+# %%
+#rdnet_in[rdnet_in. duplicated(subset = ['INVENTTRANSID'], keep=False)].to_excel("./data/roadnet/rdnet_in_dup.xlsx")
+
+# %%
 rdnet_in.rename(columns={'QUANTITY':'CASEQTY','LOCATIONID':'DESTINATIONLOCATIONID','ORDERID':'ORDERNUMBER','WAREHOUSEID':'ORIGINLOCATIONID','ORDERACCOUNT':'STOPLOCATIONID','ORDERACCOUNTNAME':'STOPLOCATIONNAME'}, inplace=True)
 
 # %% [markdown]
 # ### Create the rest of the fields as per the Roadnet inbound file spec
-
-# %%
-#rdnet_in['DYNAMICSRETRIEVALSESSIONID'] = 'ZA1-000000661'
 
 # %%
 today = str(datetime.now())
@@ -293,11 +325,25 @@ rdnet_in['STOPARRIVALTIME'] = rdnet_in['STOPARRIVALTIME'].dt.normalize() + pd.Ti
 
 # %%
 print("Loading the customer master to obtain the zipcode")
-customers=pd.read_csv('data/customer_master.csv',low_memory=False)
+#Do the following once-off to create the parquet file
+#customers=pd.read_csv("./data/customers/2023-08-10_CustomersV3.csv",low_memory=False)
+#customers.to_parquet("./data/customers.parquet")
+customers=pd.read_parquet("./data/customers.parquet")
 customers_short = customers[['ADDRESSZIPCODE','CUSTOMERACCOUNT','ORGANIZATIONNAME']].copy()
+#customers_short=pd.read_csv("./data/customers/customers_short.csv",low_memory=False)
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].fillna(0)
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].astype(int)
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].astype(str)
+
+# %%
+len(rdnet_in)
+
+# %%
+rdnet_in_bk=rdnet_in.copy()
+
+# %%
+# To restore
+#rdnet_in=rdnet_in_bk.copy()
 
 # %%
 rdnet_in = pd.merge(
@@ -317,12 +363,14 @@ rdnet_in = pd.merge(
 )
 
 # %%
+#len(rdnet_in)
+
+# %%
 rdnet_in.rename(columns={'ADDRESSZIPCODE':'STOPPOSTALCODE'}, inplace=True)
 rdnet_in.drop(columns={'CUSTOMERACCOUNT', 'ORGANIZATIONNAME'}, inplace=True, axis=1)
 
 # %%
-# Drop duplicates
-rdnet_in = rdnet_in.drop_duplicates(keep='first');
+#rdnet_in['STOPPOSTALCODE']
 
 # %%
 #rdnet_in.sort_values(['ORIGINLOCATIONID','ROADNETROUTE']).to_csv('data/roadnet/try1.csv', index=False)
@@ -335,8 +383,7 @@ rdnet_in = rdnet_in.drop_duplicates(keep='first');
 # - Generate n output files, each with ORIGINLOCATIONID as from the csv file
 
 # %%
-print('Remember to update data/roadnet/sessionIDs.csv with the list of session IDs.  This will determine how the Roadnet inbound file will be split.')
-input('Press "Enter" to continue. ')
+input('Remember to update data/roadnet/sessionIDs.csv with the list of session IDs.  This will determine how the Roadnet inbound file will be split.  Press "Enter" to continue. ')
 sessionids = pd.read_csv('data/roadnet/sessionIDs.csv')
 
 # %%
@@ -350,6 +397,9 @@ unique_warehouses_np = rdnet_in['ORIGINLOCATIONID'].unique()
 unique_warehouses_df = pd.DataFrame(unique_warehouses_np)
 number_of_warehouses = len(rdnet_in['ORIGINLOCATIONID'].unique())
 number_of_sessionIDs = len(sessionids)
+
+# %%
+number_of_warehouses
 
 # %%
 if number_of_warehouses < number_of_sessionIDs:
@@ -396,6 +446,9 @@ x.drop(columns={'INVENTTRANSID'}, inplace=True, axis=1)
 # ### Merge back the warehouse-based split into the dataframe
 
 # %%
+len(rdnet_in)
+
+# %%
 rdnet_in = pd.merge(
     rdnet_in,
     x,
@@ -411,6 +464,9 @@ rdnet_in = pd.merge(
     indicator=False,
     validate=None,
 )
+
+# %%
+len(rdnet_in)
 
 # %%
 rdnet_in.drop(columns={'WH_route_combination'}, inplace=True, axis=1)
@@ -435,43 +491,11 @@ for sessionID in sessionids_list:
     df_temp = rdnet_in[mask].copy()
     filename = 'data/roadnet/inbound/rdnet_inbound_'+sessionID[0]
     df_temp.to_csv(filename+'.csv',index=False, line_terminator='\r\n')    
-
-# %% [markdown]
-# ### Change nl to cr-nl in the CSV files
-
-# %%
-""" def fix_newlines(fname, fnum):
-
-    with open(fname, 'r') as fr:
-        # reading line by line
-        lines = fr.readlines()
-        last_line = len(lines)
-
-    for line in lines:
-        replaced_line = re.sub("\n", "\r\n", line)
-        #print(fnum,line)
-        outfile = fname[:-4] + '_fixed.csv'
-        with open(outfile, 'a') as fw:
-            fw.write(replaced_line)    
-
-    return """
-
-# %%
-""" path = "data/roadnet/inbound/"
-dir_list = os.listdir(path)
-
-for i in range(0,len(dir_list)):
-    csv_file = path+dir_list[i]
-    fix_newlines(csv_file,i)
-    os.remove(path+dir_list[i]) """
+    df_temp.to_xml(filename+'.xml',index=False)    
 
 # %%
 print('The Roadnet order lines were split by warehouse and route ID, into ' + str(number_of_sessionIDs) + ' files.  The lines were split as follows:')
 print(rdnet_in.groupby(['DYNAMICSRETRIEVALSESSIONID']).agg({'INVENTTRANSID': 'count'}))
-
-
-# %%
-rdnet_out['WAREHOUSEID'].nunique()
 
 
 # %% [markdown]
