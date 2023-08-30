@@ -104,7 +104,8 @@ dir_list = os.listdir(path)
 # 21 user - Release to warehouse , picking and despatch (Roadnet loads).xlsx
 
 for i in range(0,len(dir_list)):
-    excel_file = path+str(i+1)+' user - Release to warehouse , picking and despatch (Roadnet loads).xlsx'
+    #excel_file = path+str(i+1)+' user - Release to warehouse , picking and despatch (Roadnet loads).xlsx'
+    excel_file = path+'User '+str(i+1)+' - Release to Warehouse (Roadnet loads) & Complete Picking Work & Process OOS.xlsx'
     #print(str(i)+xml_file)
     temp = pd.read_csv(path+dir_list[i])
     temp.to_excel(excel_file, index=False)
