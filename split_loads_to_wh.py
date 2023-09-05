@@ -97,7 +97,7 @@ for i in range(len(loads_to_wh)):
 # ### Now convert the CSV files into Excel
 
 # %%
-extensions = {"1":"- ADSD load confirmation.xlsx","2":"- Release to Warehouse (Roadnet loads) & Complete Picking Work & Process OOS.xlsx"}
+extensions = {"1":" - ADSD load confirmation.xlsx","2":" - Release to Warehouse (Roadnet loads) & Complete Picking Work & Process OOS.xlsx"}
 
 # %%
 print("The following filename suffixes available:")
