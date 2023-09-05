@@ -97,6 +97,20 @@ for i in range(len(loads_to_wh)):
 # ### Now convert the CSV files into Excel
 
 # %%
+extensions = {"1":"- ADSD load confirmation.xlsx","2":"- Release to Warehouse (Roadnet loads) & Complete Picking Work & Process OOS.xlsx"}
+
+# %%
+print("The following filename suffixes available:")
+print(extensions)
+
+# %%
+ext_str = input('Select the file naming convention: ')
+extension = extensions[ext_str]
+
+# %%
+print(extension)
+
+# %%
 path = "data/rel_to_wh/outbound_to_EA/"
 dir_list = os.listdir(path)
 
@@ -105,7 +119,7 @@ dir_list = os.listdir(path)
 
 for i in range(0,len(dir_list)):
     #excel_file = path+str(i+1)+' user - Release to warehouse , picking and despatch (Roadnet loads).xlsx'
-    excel_file = path+'User '+str(i+1)+' - Release to Warehouse (Roadnet loads) & Complete Picking Work & Process OOS.xlsx'
+    excel_file = path+'User '+str(i+1)+extension
     #print(str(i)+xml_file)
     temp = pd.read_csv(path+dir_list[i])
     temp.to_excel(excel_file, index=False)
