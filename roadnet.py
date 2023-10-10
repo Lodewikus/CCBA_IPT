@@ -246,6 +246,10 @@ rdnet_in['ROADNETROUTEINTERNALROUTEID'] = today + rdnet_in['STOPLOCATIONID'].ast
 no_of_customers = len(rdnet_in['STOPLOCATIONID'].unique())
 
 # %%
+# Get legal entity from the invettransid
+le_code = rdnet_in.loc[0, 'INVENTTRANSID'][:3]
+
+# %%
 rdnet_in['APPTID'] = ''
 rdnet_in['DESCRIPTION'] = 'BLOEM_PLAN'
 rdnet_in['ERROR'] = ''
@@ -260,7 +264,7 @@ rdnet_in['PALLETQTY'] = '0'
 rdnet_in['REFERENCECATEGORY'] = 'Sales'
 rdnet_in['REFERENCEDOCUMENT'] = 'SalesOrder'
 rdnet_in['ROADNETINTERNALSESSIONID'] = '35411'
-rdnet_in['ROADNETREGIONID'] = 'ZA1'
+rdnet_in['ROADNETREGIONID'] = 'le_code'
 rdnet_in['ROUTECODE'] = ''
 rdnet_in['SECONDDRIVER'] = ''
 rdnet_in['SECONDTRAILER'] = ''
@@ -303,10 +307,6 @@ rdnet_in['SCHEDULEDSHIPDATETIME'] = rdnet_in['SCHEDULEDSHIPDATETIME'].dt.normali
 
 rdnet_in['STOPARRIVALTIME'] = date_dt
 rdnet_in['STOPARRIVALTIME'] = rdnet_in['STOPARRIVALTIME'].dt.normalize() + pd.Timedelta(days=0) + pd.Timedelta(hours=8) + pd.Timedelta(minutes=28)
-
-# %%
-# Get legal entity from the invettransid
-le_code = rdnet_in.loc[0, 'INVENTTRANSID'][:3]
 
 # %% [markdown]
 # ### Get customer master in order to get the postal code
