@@ -250,11 +250,10 @@ no_of_customers = len(rdnet_in['STOPLOCATIONID'].unique())
 le_code = rdnet_in.loc[0, 'INVENTTRANSID'][:3]
 
 # %%
+# Defaults applied to all LEs
+
 rdnet_in['APPTID'] = ''
-rdnet_in['DESCRIPTION'] = 'BLOEM_PLAN'
 rdnet_in['ERROR'] = ''
-rdnet_in['FIRSTDRIVER'] = '825196'
-rdnet_in['FIRSTTRAILER'] = 'ST29PTAIL'
 rdnet_in['LASTSTOPISDESTINATION'] = 'No'
 rdnet_in['LOADID'] = ''
 rdnet_in['LOADTEMPLATEID'] = ''
@@ -271,18 +270,51 @@ rdnet_in['SECONDTRAILER'] = ''
 rdnet_in['SEQUENCEDISTANCE'] = '.000000'
 rdnet_in['SEQUENCENUMBER'] = '1'
 rdnet_in['SEQUENCETRAVELTIME'] = '0'
-rdnet_in['SHIPPINGCARRIER'] = '0'
 rdnet_in['STATUS'] = 'Error'
 rdnet_in['STOPTYPE'] = 'stpStop'
 rdnet_in['TOTALDISTANCE'] = '.000000'
 rdnet_in['TOTALROUTEDISTANCE'] = '.000000'
 rdnet_in['TRUCKANDTRAILERASSIGNED'] = 'No'
 rdnet_in['UNITID'] = ''
-rdnet_in['VEHICLEID'] = 'TT4X2TAIL'
 rdnet_in['STOPSERVICETIME'] = '720'
 rdnet_in['TOTALSERVICETIME'] = '720'
 rdnet_in['TOTALTRAVELTIME'] = '0'
 rdnet_in['LINEREFID'] = rdnet_in['INVENTTRANSID']
+
+# %%
+# Defaults that are specific per LEs
+
+if le_code == "ZA1":
+    rdnet_in['DESCRIPTION'] = 'BLOEM_PLAN'
+    rdnet_in['FIRSTDRIVER'] = '825196'
+    rdnet_in['FIRSTTRAILER'] = 'ST29PTAIL'
+    rdnet_in['SHIPPINGCARRIER'] = '0'
+    rdnet_in['VEHICLEID'] = 'TT4X2TAIL'
+
+elif le_code == "NA1":
+    rdnet_in['DESCRIPTION'] = 'Windhoek_PLAN'
+    rdnet_in['FIRSTDRIVER'] = 'NA1-000002'
+    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['SHIPPINGCARRIER'] = '0'
+    rdnet_in['VEHICLEID'] = ''
+
+elif le_code == "UG1":
+    rdnet_in['DESCRIPTION'] = 'Rwenzori_PLAN'
+    rdnet_in['FIRSTDRIVER'] = 'UG1-000001'
+    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['SHIPPINGCARRIER'] = 'INTERNAL'
+    rdnet_in['VEHICLEID'] = ''    
+    
+elif le_code == "MZ1":
+    rdnet_in['DESCRIPTION'] = 'Chimoio_PLAN'
+    rdnet_in['FIRSTDRIVER'] = 'MZ1-000001'
+    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['SHIPPINGCARRIER'] = '0'
+    rdnet_in['VEHICLEID'] = ''    
+    
+else:
+    print("No valid legal entity")
+    raise SystemExit("Terminating")
 
 # %%
 date_txt = input('Enter the dispatch date in the format yyyy-mm-dd: ')
