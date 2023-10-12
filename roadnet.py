@@ -282,7 +282,7 @@ rdnet_in['TOTALTRAVELTIME'] = '0'
 rdnet_in['LINEREFID'] = rdnet_in['INVENTTRANSID']
 
 # %%
-# Defaults that are specific per LEs
+# Defaults that are specific per LE
 
 if le_code == "ZA1":
     rdnet_in['DESCRIPTION'] = 'BLOEM_PLAN'
@@ -294,9 +294,9 @@ if le_code == "ZA1":
 elif le_code == "NA1":
     rdnet_in['DESCRIPTION'] = 'Windhoek_PLAN'
     rdnet_in['FIRSTDRIVER'] = 'NA1-000002'
-    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['FIRSTTRAILER'] = 'LD1001'
     rdnet_in['SHIPPINGCARRIER'] = '0'
-    rdnet_in['VEHICLEID'] = ''
+    rdnet_in['VEHICLEID'] = 'LD1002'
 
 elif le_code == "UG1":
     rdnet_in['DESCRIPTION'] = 'Rwenzori_PLAN'
