@@ -63,10 +63,8 @@ print("Loading " + str(len(dir_list)) + " XML files in ", path)
 def xml_to_multiple_lines(fname, fnum):
 
     with open(fname, 'r') as fr:
-        # reading line by line
         lines = fr.readlines()
         last_line = len(lines)
-        #print(last_line)
 
     for line in lines:
         replaced_line = re.sub(">", ">\u000A", line)
@@ -83,7 +81,6 @@ def xml_to_multiple_lines(fname, fnum):
 
 for i in range(0,len(dir_list)):
     xml_file = path+dir_list[i]
-    #print(xml_file)
     xml_to_multiple_lines(xml_file,i)
 
 number_of_xml = len(dir_list)
@@ -102,12 +99,10 @@ def import_roadnet_files2(fname, fnum, outfile):
 
     try:    
         with open(fname, 'r') as fr:
-            # reading line by line
             lines = fr.readlines()
 
             last_line = len(lines)
 
-            # opening in writing mode
             with open(outfile, 'a') as fw:
                 for line in lines:      
                     substr1 = 'CCBROADNETWORKBENCHSESSIONTABLEENTITY'       
@@ -116,10 +111,8 @@ def import_roadnet_files2(fname, fnum, outfile):
                     x2 = re.search(substr2, line)
                     substr3 = 'xml version='       
                     x3 = re.search(substr3, line)
-                    #print(x)
                     if x1 == None and x2 == None and x3 == None:
                         fw.write(line)
-        #print(fname+" lines deleted")
 
     except:
         print("Error importing "+fname)
@@ -127,8 +120,6 @@ def import_roadnet_files2(fname, fnum, outfile):
 # %%
 for i in range(0,len(prep_dir_list)):
     xml_file = path+prep_dir_list[i]
-    #print(i)
-    #print(xml_file)
     import_roadnet_files2(xml_file,i, consolidated_roadnet_out_file)
 
 # %% [markdown]
@@ -144,14 +135,12 @@ sizelimit = 5000
 
 try:    
     with open(fname, 'r') as fr:
-        # reading line by line
         lines = fr.readlines()
 
         last_line = len(lines)
 
         line_counter = 1
 
-        # opening in writing mode
         last_x = 0
         for i in range(0,len(lines)):
             line = lines[i]
@@ -202,19 +191,10 @@ for i in range(1,len(dir_list)):
     rdnet_out = pd.concat([rdnet_out, temp], ignore_index=True)
 
 # %%
-len(rdnet_out)
-
-# %%
-rdnet_out[rdnet_out.duplicated(['INVENTTRANSID'], keep=False)]
-
-# %%
 rdnet_out.drop(columns={'OUTPERFORMROADNETDESTINATION'}, inplace=True, axis=1)
 
 # %%
 rdnet_out = rdnet_out.drop_duplicates(keep='first').copy()
-
-# %%
-len(rdnet_out)
 
 # %% [markdown]
 # ### Create the Roadnet inbound file by copying selected columns as-is from the outbound data
@@ -237,7 +217,6 @@ today = today.replace(':','h')
 today = today.replace('-','')
 today = today.replace(' ','-')
 today = today[0:14] + '-'
-#print("Today date is: ", today)
 
 # %%
 rdnet_in['ROADNETROUTEINTERNALROUTEID'] = today + rdnet_in['STOPLOCATIONID'].astype(str)
@@ -321,7 +300,6 @@ else:
 # %%
 date_txt = input('Enter the dispatch date in the format yyyy-mm-dd: ')
 date_dt = pd.to_datetime(date_txt)
-#date_dt = pd.to_datetime('today')
 
 # %%
 rdnet_in['ROUTECOMPLETETIME'] = date_dt
@@ -349,11 +327,7 @@ rdnet_in['STOPARRIVALTIME'] = rdnet_in['STOPARRIVALTIME'].dt.normalize() + pd.Ti
 print("Loading the customer master to obtain the zipcode")
 
 if le_code == "ZA1":
-    #Do the following once-off to create the parquet file
-    #customers=pd.read_csv("./data/customers/2023-08-10_CustomersV3.csv",low_memory=False)
-    #customers.to_parquet("./data/customers.parquet")
     customers=pd.read_parquet("./data/customers/customers.parquet")
-    #customers_short = customers[['ADDRESSZIPCODE','CUSTOMERACCOUNT','ORGANIZATIONNAME']].copy()
 
 elif le_code == "NA1" or le_code == "UG1" or le_code == "MZ1":
     customers=pd.read_csv("./data/customers/NA1_UG1_MZ1_Export-Customersaddresses V3.csv")
@@ -367,9 +341,6 @@ customers_short = customers[['ADDRESSZIPCODE','CUSTOMERACCOUNT']].copy()
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].fillna(0)
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].astype(int)
 customers_short['ADDRESSZIPCODE'] = customers_short['ADDRESSZIPCODE'].astype(str)
-
-# %%
-len(rdnet_in)
 
 # %%
 rdnet_in_bk=rdnet_in.copy()
@@ -512,3 +483,5 @@ print(rdnet_in.groupby(['DYNAMICSRETRIEVALSESSIONID']).agg({'INVENTTRANSID': 'co
 
 # %% [markdown]
 # ### End of script
+
+
