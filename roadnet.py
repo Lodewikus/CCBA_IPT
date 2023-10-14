@@ -294,23 +294,25 @@ if le_code == "ZA1":
 elif le_code == "NA1":
     rdnet_in['DESCRIPTION'] = 'Windhoek_PLAN'
     rdnet_in['FIRSTDRIVER'] = 'NA1-000002'
-    rdnet_in['FIRSTTRAILER'] = 'LD1001'
+    #rdnet_in['FIRSTTRAILER'] = 'LD1001'
+    rdnet_in['FIRSTTRAILER'] = 'TT1001'
     rdnet_in['SHIPPINGCARRIER'] = '0'
-    rdnet_in['VEHICLEID'] = 'LD1002'
+    #rdnet_in['VEHICLEID'] = 'LD1002'
+    rdnet_in['VEHICLEID'] = 'TT1002'
 
 elif le_code == "UG1":
     rdnet_in['DESCRIPTION'] = 'Rwenzori_PLAN'
     rdnet_in['FIRSTDRIVER'] = 'UG1-000001'
-    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['FIRSTTRAILER'] = 'TT1003'
     rdnet_in['SHIPPINGCARRIER'] = 'INTERNAL'
-    rdnet_in['VEHICLEID'] = ''    
+    rdnet_in['VEHICLEID'] = 'TT1004'    
     
 elif le_code == "MZ1":
     rdnet_in['DESCRIPTION'] = 'Chimoio_PLAN'
     rdnet_in['FIRSTDRIVER'] = 'MZ1-000001'
-    rdnet_in['FIRSTTRAILER'] = ''
+    rdnet_in['FIRSTTRAILER'] = 'TT1002'
     rdnet_in['SHIPPINGCARRIER'] = '0'
-    rdnet_in['VEHICLEID'] = ''    
+    rdnet_in['VEHICLEID'] = 'TT1003'    
     
 else:
     print("No valid legal entity")
@@ -510,5 +512,8 @@ print(rdnet_in.groupby(['DYNAMICSRETRIEVALSESSIONID']).agg({'INVENTTRANSID': 'co
 
 # %% [markdown]
 # ### End of script
+
+# %%
+rdnet_out['WEIGHTUNIT']
 
 
