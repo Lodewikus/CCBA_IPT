@@ -512,8 +512,3 @@ print(rdnet_in.groupby(['DYNAMICSRETRIEVALSESSIONID']).agg({'INVENTTRANSID': 'co
 
 # %% [markdown]
 # ### End of script
-
-# %%
-rdnet_out['WEIGHTUNIT']
-
-
