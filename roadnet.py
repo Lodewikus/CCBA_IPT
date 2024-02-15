@@ -331,6 +331,30 @@ else:
     raise SystemExit("Terminating")
 
 # %%
+drivers_trucks = pd.read_excel('data/roadnet/drivers_trucks.xlsx')
+
+# %%
+drivers_trucks = drivers_trucks[drivers_trucks['le_code'] == le_code].reset_index(drop=True).copy()
+drivers_trucks_len = len(drivers_trucks)
+
+# %%
+stop_locations = rdnet_in['STOPLOCATIONID'].unique()
+
+# %%
+rdnet_in = rdnet_in.sort_values(by=['STOPLOCATIONID']).reset_index(drop=True).copy()
+
+# %%
+truck_index = 1
+for stop_location in stop_locations:
+    if truck_index > drivers_trucks_len:
+        truck_index = 1
+    for index, row in rdnet_in[rdnet_in['STOPLOCATIONID'] == stop_location].iterrows():
+        rdnet_in.loc[index, ['FIRSTDRIVER']] = drivers_trucks.loc[truck_index - 1, ['FIRSTDRIVER']]
+        rdnet_in.loc[index, ['FIRSTTRAILER']] = drivers_trucks.loc[truck_index - 1, ['FIRSTTRAILER']]
+        rdnet_in.loc[index, ['VEHICLEID']] = drivers_trucks.loc[truck_index - 1, ['VEHICLEID']]
+    truck_index = truck_index + 1
+
+# %%
 date_txt = input('Enter the dispatch date in the format yyyy-mm-dd: ')
 date_dt = pd.to_datetime(date_txt)
 
