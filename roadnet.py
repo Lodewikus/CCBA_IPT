@@ -124,9 +124,9 @@ def import_roadnet_files2(fname, fnum, outfile):
                     le31 = re.search(substr_le, line)
                     substr_le = 'LE_ID="NA1"'
                     le32 = re.search(substr_le, line)   
-                    substr_le = 'LE_ID="za1"'       
+                    substr_le = 'LE_CODE="za1"'       
                     le41 = re.search(substr_le, line)
-                    substr_le = 'LE_ID="ZA1"'
+                    substr_le = 'LE_CODE="ZA1"'
                     le42 = re.search(substr_le, line) 
 
                     if le11 != None or le12 != None:
