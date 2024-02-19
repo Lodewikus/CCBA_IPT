@@ -123,14 +123,20 @@ def import_roadnet_files2(fname, fnum, outfile):
                     substr_le = 'LE_ID="na1"'       
                     le31 = re.search(substr_le, line)
                     substr_le = 'LE_ID="NA1"'
-                    le32 = re.search(substr_le, line)                    
+                    le32 = re.search(substr_le, line)   
+                    substr_le = 'LE_ID="za1"'       
+                    le41 = re.search(substr_le, line)
+                    substr_le = 'LE_ID="ZA1"'
+                    le42 = re.search(substr_le, line) 
 
                     if le11 != None or le12 != None:
                         le_code = 'UG1'
                     if le21 != None or le22 != None:
                         le_code = 'MZ1'                        
+                    if le41 != None or le42 != None:
+                        le_code = 'ZA1'  
                     if le31 != None or le32 != None:
-                        le_code = 'NA1'                        
+                        le_code = 'NA1'
 
                     substr1 = 'CCBROADNETWORKBENCHSESSIONTABLEENTITY'       
                     x1 = re.search(substr1, line)
